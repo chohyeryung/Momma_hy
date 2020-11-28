@@ -60,7 +60,7 @@ class Choice(QMainWindow):
         self.hide()
 
     def GoGame(self):
-        self.gamew = Game_mama()
+        self.gamew = Game_mama(self)
         self.gamew.show()
         self.hide
 
