@@ -3,6 +3,7 @@ import sys
 
 import pygame
 from PyQt5.QtWidgets import *
+from PyQt5.uic.properties import QtGui
 
 class Game_mama(QWidget):
 
@@ -16,13 +17,13 @@ class Game_mama(QWidget):
         game_font = pygame.font.Font(None, 40) #폰트 ,크기
 
         #총 시간
-        total_time = 15
+        total_time = 20
 
         #닿은 횟수
         count = 0
 
         # 총 점수
-        total_score = 0
+        total_score = 1000
         #시작 시간 정보
         start_ticks = pygame.time.get_ticks()
 
@@ -58,30 +59,31 @@ class Game_mama(QWidget):
         bad3 = pygame.image.load("image/raman.png")
         bad4 = pygame.image.load("image/spicy.JPG")
 
-        # bad_image = [bad1, bad2, bad3, bad4]
-        #
-        # random_img = random.randint(0, bad_image.length())
+        bad_image = [bad1, bad2, bad3, bad4]
+        i = random.randint(0, 5)
 
         #캐릭터 이동 속도
         character_speed = 9
 
         #나쁜 음식
-        enemy = pygame.image.load("image/sandwich.png")
+        enemy = pygame.image.load(bad_image[i])
         enemy_size = enemy.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
         enemy_width = enemy_size[0]  # 가로크기
         enemy_height = enemy_size[1]  # 세로 크기
         enemy_x_pos = random.randint(0, screen_width - enemy_width)
         enemy_y_pos = 0
-        enemy_speed = 7
+        enemy_speed = 10
 
-        #좋은 캐릭터
-        goodfood = pygame.image.load("image/good.png")
-        goodfood_size = goodfood.get_rect().size
-        goodfood_width = goodfood_size[0]
-        goodfood_height = goodfood_size[1]
-        goodfood_x_pos = random.randint(0, screen_width - goodfood_width)
-        goodfood_y_pos = 0
-        goodfood_speed = 7
+        def score(text):
+            msgBox = QMessageBox()
+            msgBox.setWindowTitle("Momma")  # 메세지창의 상단 제목
+            msgBox.setWindowIcon(QtGui.QPixmap("info.png"))  # 메세지창의 상단 icon 설정
+            msgBox.setIcon(QMessageBox.Information)  # 메세지창 내부에 표시될 아이콘
+            msgBox.setText(text)  # 메세지 제목
+            msgBox.setInformativeText("총 점수 : {}".format(total_score))  # 메세지 내용
+            msgBox.setStandardButtons(QMessageBox.Yes)  # 메세지창의 버튼
+            msgBox.setDefaultButton(QMessageBox.Yes)  # 포커스가 지정된 기본 버튼
+            msgBox.exec_()
 
         #이벤트 루프 없으면 창 바로 꺼짐
         running = True
@@ -131,11 +133,9 @@ class Game_mama(QWidget):
 
             #충돌 체크
             if character_reat.colliderect(enemy_reat):
-                count += 1
-                print(count)
                 print("나쁜 음식을 먹었습니다!")
-                total_score = total_score - 5
-                running = False
+                total_score -= 5
+                running = True
 
 
             # screen.fill(()) RGB컬러로도 화면 채우기 가능
@@ -147,10 +147,14 @@ class Game_mama(QWidget):
 
             #출력할 글자 ,True, 글자 색 설정
             timer= game_font.render("Time : {}".format(int(total_time - ellipsis_time)), True, (255,255,255))
+            Total_score_show = game_font.render("Score : {}".format(total_score), True, (255,255,255))
             screen.blit(timer, (10, 20))
+            screen.blit(Total_score_show, (120, 20))
 
             #지정된 시간보다 시간을 초과한다면
             if total_time - ellipsis_time <= 0:
+                running = False
+            elif total_score == 0:
                 running = False
 
             pygame.display.update()  # 화면을 계속해서 호출해야 함
@@ -160,6 +164,9 @@ class Game_mama(QWidget):
 
         #py게임 종료
         pygame.quit()
+        score("게임 종료")
+
+
 
 if __name__=="__main__":
     app = QApplication(sys.argv)
