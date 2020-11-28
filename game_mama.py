@@ -23,7 +23,8 @@ class Game_mama(QWidget):
         count = 0
 
         # 총 점수
-        total_score = 100
+        total_score = 1000
+        total_scorea = 0
         #시작 시간 정보
         start_ticks = pygame.time.get_ticks()
 
@@ -99,7 +100,6 @@ class Game_mama(QWidget):
         running = True
         while running:
             dt = clock.tick(60)
-            print("fps : " + str(clock.get_fps()))
 
             for event in pygame.event.get(): #어떤 이벤트가 발생하였는지
                 if event.type == pygame.QUIT: # 창이 닫히는 이벤트가 실행되었는지
@@ -165,32 +165,32 @@ class Game_mama(QWidget):
             enemy3_reat.left = enemy_x_pos3
             enemy3_reat.top = enemy_y_pos3
 
+            #scorea = 0
+            #scroe = 100
 
             #충돌 체크
             if character_reat.colliderect(enemy1_reat):
                 count += 1
                 print(count)
                 print("나쁜 음식을 먹었습니다!")
-                if count < 2:
-                    total_score -= 50
-                    running = True
+                total_score -= 5
+                total_score += (count-1)*5
+                print(total_score)
 
             elif character_reat.colliderect(enemy2_reat):
                 count += 1
                 print(count)
                 print("나쁜 음식을 먹었습니다!")
-                if count < 2:
-                    total_score -= 50
-                    running = True
+                total_score += 5
+                total_score -= (count - 1) * 5
 
 
             elif character_reat.colliderect(enemy3_reat):
                 count += 1
                 print(count)
                 print("좋은 음식을 먹었습니다!")
-                if count < 2:
-                    total_score +=50
-                    running = True
+                total_score += 5
+                total_score -= (count - 1) * 5
 
 
             # screen.fill(()) RGB컬러로도 화면 채우기 가능
