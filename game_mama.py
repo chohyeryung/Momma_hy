@@ -3,10 +3,8 @@ import sys
 
 import pygame
 from PyQt5.QtWidgets import *
-from PyQt5.uic.properties import QtGui
 
 class Game_mama(QWidget):
-
     def __init__(self):
         pygame.init() #초기화 반드시 필요함
         self.initUI()
@@ -60,13 +58,13 @@ class Game_mama(QWidget):
         bad4 = pygame.image.load("image/spicy.JPG")
 
         bad_image = [bad1, bad2, bad3, bad4]
-        i = random.randint(0, 5)
+        i = random.randint(0, len(bad_image))
 
         #캐릭터 이동 속도
         character_speed = 9
 
         #나쁜 음식
-        enemy = pygame.image.load(bad_image[i])
+        enemy = pygame.image.load("image/coffee.png" or "image/honey/png")
         enemy_size = enemy.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
         enemy_width = enemy_size[0]  # 가로크기
         enemy_height = enemy_size[1]  # 세로 크기
@@ -74,22 +72,12 @@ class Game_mama(QWidget):
         enemy_y_pos = 0
         enemy_speed = 10
 
-        def score(text):
-            msgBox = QMessageBox()
-            msgBox.setWindowTitle("Momma")  # 메세지창의 상단 제목
-            msgBox.setWindowIcon(QtGui.QPixmap("info.png"))  # 메세지창의 상단 icon 설정
-            msgBox.setIcon(QMessageBox.Information)  # 메세지창 내부에 표시될 아이콘
-            msgBox.setText(text)  # 메세지 제목
-            msgBox.setInformativeText("총 점수 : {}".format(total_score))  # 메세지 내용
-            msgBox.setStandardButtons(QMessageBox.Yes)  # 메세지창의 버튼
-            msgBox.setDefaultButton(QMessageBox.Yes)  # 포커스가 지정된 기본 버튼
-            msgBox.exec_()
+
 
         #이벤트 루프 없으면 창 바로 꺼짐
         running = True
         while running:
             dt = clock.tick(60)
-            print("fps : " + str(clock.get_fps()))
 
             for event in pygame.event.get(): #어떤 이벤트가 발생하였는지
                 if event.type == pygame.QUIT: # 창이 닫히는 이벤트가 실행되었는지
@@ -133,8 +121,10 @@ class Game_mama(QWidget):
 
             #충돌 체크
             if character_reat.colliderect(enemy_reat):
+                count += 1
                 print("나쁜 음식을 먹었습니다!")
-                total_score -= 5
+                total_score -= round(5 / count, 1)
+                print(count , total_score)
                 running = True
 
 
@@ -146,10 +136,10 @@ class Game_mama(QWidget):
             ellipsis_time = (pygame.time.get_ticks() - start_ticks) / 1000 #초 단위로 지난 시간 표시
 
             #출력할 글자 ,True, 글자 색 설정
-            timer= game_font.render("Time : {}".format(int(total_time - ellipsis_time)), True, (255,255,255))
+            timer = game_font.render("Time : {}".format(int(total_time - ellipsis_time)), True, (255,255,255))
             Total_score_show = game_font.render("Score : {}".format(total_score), True, (255,255,255))
             screen.blit(timer, (10, 20))
-            screen.blit(Total_score_show, (120, 20))
+            screen.blit(Total_score_show, (140, 20))
 
             #지정된 시간보다 시간을 초과한다면
             if total_time - ellipsis_time <= 0:
@@ -164,9 +154,6 @@ class Game_mama(QWidget):
 
         #py게임 종료
         pygame.quit()
-        score("게임 종료")
-
-
 
 if __name__=="__main__":
     app = QApplication(sys.argv)
