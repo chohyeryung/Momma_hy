@@ -9,6 +9,16 @@ class Game_mama(QWidget):
         pygame.init() #초기화 반드시 필요함
         self.initUI()
 
+    def show_dialog(self):
+        self.msg.setIcon(QMessageBox.Information)
+        self.msg.setWindowTitle('일기 쓰기')
+        self.msg.setText('일기가 저장되었습니다.')
+        self.msg.setStandardButtons(QMessageBox.Ok)
+        retval = self.msg.exec_()
+
+        if retval == QMessageBox.Ok:
+            self.exist()
+
     def initUI(self):
 
         #폰트
@@ -123,9 +133,9 @@ class Game_mama(QWidget):
             if character_reat.colliderect(enemy_reat):
                 count += 1
                 print("나쁜 음식을 먹었습니다!")
-                total_score -= round(5 / count, 1)
-                print(count , total_score)
-                running = True
+                if count < 2:
+                    total_score -= 50
+                    running = True
 
 
             # screen.fill(()) RGB컬러로도 화면 채우기 가능
@@ -150,10 +160,12 @@ class Game_mama(QWidget):
             pygame.display.update()  # 화면을 계속해서 호출해야 함
 
         #끝나기 전 잠시 기달리는 시간
-        pygame.time.delay(3000)
+        pygame.time.delay(2000)
 
         #py게임 종료
         pygame.quit()
+        self.show_dialog()
+
 
 if __name__=="__main__":
     app = QApplication(sys.argv)
