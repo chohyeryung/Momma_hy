@@ -5,10 +5,9 @@ import pygame
 from PyQt5.QtWidgets import *
 
 class Game_mama(QWidget):
-
-    def __init__(self, choice_window):
+    def __init__(self):
+        super().__init__()
         pygame.init() #초기화 반드시 필요함
-        self.choice_window=choice_window
         self.initUI()
 
     def initUI(self):
@@ -167,31 +166,36 @@ class Game_mama(QWidget):
 
 
             #충돌 체크
+            # enemy_rects=[enemy1_reat, enemy2_reat, enemy3_reat]
+            # collision_i=-1
+            # for i, enemy_reat in enumerate(enemy_rects):
+            #     if character_reat.colliderect(enemy_reat) and collision_i==-1:
+            #         total_score-=10
+            #         collision_i=i
+            #     else:
+            #         collision_i=-1
+
             if character_reat.colliderect(enemy1_reat):
                 count += 1
                 print(count)
                 print("나쁜 음식을 먹었습니다!")
-                if count < 2:
-                    total_score -= 50
-                    running = True
+                total_score -= 10
+                running = True
+
 
             elif character_reat.colliderect(enemy2_reat):
                 count += 1
                 print(count)
                 print("나쁜 음식을 먹었습니다!")
-                if count < 2:
-                    total_score -= 50
-                    running = True
-
+                total_score -= 10
+                running = True
 
             elif character_reat.colliderect(enemy3_reat):
                 count += 1
                 print(count)
-                print("좋은 음식을 먹었습니다!")
-                if count < 2:
-                    total_score +=50
-                    running = True
-
+                print("나쁜 음식을 먹었습니다!")
+                total_score -= 10
+                running = True
 
             # screen.fill(()) RGB컬러로도 화면 채우기 가능
             screen.blit(background, (0,0))
@@ -210,22 +214,27 @@ class Game_mama(QWidget):
 
             #지정된 시간보다 시간을 초과한다면
             if total_time - ellipsis_time <= 0:
-                running = False
+                running=False
 
             elif total_time==0:
-                running=False
+                running = False
 
             elif total_score==0:
-                running=False
+                running = False
 
             pygame.display.update()  # 화면을 계속해서 호출해야 함
 
-        #끝나기 전 잠시 기달리는 시간
-        pygame.time.delay(3000)
 
-        #py게임 종료
-        self.choice_window.show()
-        pygame.quit()
+        self.activeMessage()
+
+    #     #py게임 종료
+    def activeMessage(self):
+        self.reply = QMessageBox.question(self, 'Game over', '게임이 종료되었습니다.',
+                                     QMessageBox.Yes)
+
+
+        if self.reply == QMessageBox.Yes:
+            pygame.quit()
 
 
 if __name__=="__main__":
