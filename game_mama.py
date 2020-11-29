@@ -74,7 +74,6 @@ class Game_mama(QWidget):
         enemy1_height = enemy1_size[1]  # 세로 크기
         enemy_x_pos1 = random.randint(0, screen_width - enemy1_width)
         enemy_y_pos1 = 0
-        enemy_speed = 7
 
         enemy2 = pygame.image.load("image/honey.png")
         enemy2_size = enemy2.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
@@ -82,7 +81,6 @@ class Game_mama(QWidget):
         enemy2_height = enemy2_size[1]  # 세로 크기
         enemy_x_pos2 = random.randint(0, screen_width - enemy2_width)
         enemy_y_pos2 = 0
-        enemy_speed = 7
 
         enemy3 = pygame.image.load("image/apple.png")
         enemy3_size = enemy3.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
@@ -129,23 +127,17 @@ class Game_mama(QWidget):
 
             if enemy_y_pos1 > screen_height:
                 enemy_y_pos1 = 0
-                enemy_x_pos1 = random.randint(0, screen_width - enemy1_width)
                 enemy_y_pos1 > screen_height
-                enemy_y_pos1 = 0
                 enemy_x_pos1 = random.randint(0, screen_width - enemy1_width)
 
             if enemy_y_pos2 > screen_height:
                 enemy_y_pos2 = 0
-                enemy_x_pos2 = random.randint(0, screen_width - enemy2_width)
                 enemy_y_pos2 > screen_height
-                enemy_y_pos2 = 0
                 enemy_x_pos2 = random.randint(0, screen_width - enemy2_width)
 
             if enemy_y_pos3 > screen_height:
-                enemy_y_pos3 = 0
-                enemy_x_pos3 = random.randint(0, screen_width - enemy3_width)
+                enemy_y_pos3 =  0
                 enemy_y_pos3 > screen_height
-                enemy_y_pos3 = 0
                 enemy_x_pos3 = random.randint(0, screen_width - enemy3_width)
 
             #충돌 처리
@@ -173,24 +165,29 @@ class Game_mama(QWidget):
                 count += 1
                 print(count)
                 print("나쁜 음식을 먹었습니다!")
-                total_score -= 5
-                total_score += (count-1)*5
-                print(total_score)
+                if count < 2:
+                    total_score -= 10
+                    running = True
+                    count = 0
+
 
             elif character_reat.colliderect(enemy2_reat):
                 count += 1
                 print(count)
                 print("나쁜 음식을 먹었습니다!")
-                total_score += 5
-                total_score -= (count - 1) * 5
-
+                if count < 2:
+                    total_score -= 10
+                    running = True
+                    count = 0
 
             elif character_reat.colliderect(enemy3_reat):
                 count += 1
                 print(count)
                 print("좋은 음식을 먹었습니다!")
-                total_score += 5
-                total_score -= (count - 1) * 5
+                if count < 2:
+                    total_score += 10
+                    running = True
+                    count = 0
 
 
             # screen.fill(()) RGB컬러로도 화면 채우기 가능
