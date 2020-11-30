@@ -56,7 +56,6 @@ class CalendarWindow(QMainWindow):
         self.calendar_label.setAlignment(Qt.AlignCenter)
         font1=self.calendar_label.font()
         font1.setPointSize(25)
-        font1.setFamily("Rockwell Nova Light")
         font1.setBold(True)
         self.calendar_label.setFont(font1)
         self.calendar_label.setText(strDate)
@@ -83,7 +82,7 @@ class CalendarWindow(QMainWindow):
 
         today_diary.write(self.file_upload.date)
         today_diary.write('\n')
-        today_diary.write(self.file_upload.contents)
+        today_diary.write('  '+self.file_upload.contents)
         today_diary.write('\n')
         today_diary.write('\n')
 
