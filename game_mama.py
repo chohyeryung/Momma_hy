@@ -30,9 +30,8 @@ class Game_mama(QWidget):
         pygame.mixer.init()
         pygame.mixer.music.load('music/back_bgm.mp3') #배경 음악
         pygame.mixer.music.play(-1) #-1: 무한 반복, 0: 한번
-        # missile_sound = pygame.mixer.Sound('missile.wav') #사운드
-        # explosion_sound = pygame.mixer.Sound('explosion.wav')
-        # game_over_sound = pygame.mixer.Sound('game_over.wav')
+        clear_sound = pygame.mixer.Sound('music/clear.mp3')
+        game_over_sound = pygame.mixer.Sound('music/sad_bgm.mp3')
 
         bad_image = pygame.image.load("image/pepper.png")
         bads = []
@@ -102,12 +101,13 @@ class Game_mama(QWidget):
 
             # 지정된 시간보다 시간을 초과한다면
             if total_time - ellipsis_time <= 0:
-                clear=False
+                clear = False
 
             elif total_time == 0:
                 clear = False
 
             if running == False:
+                game_over_sound.play()
                 pygame.mixer.music.stop()
                 game_over_text = over_font.render('게임 종료', True, (255, 0, 0))
                 game_over_score = over_font.render('점수 : {}'.format(missed), True, (255, 0, 0))
@@ -117,7 +117,9 @@ class Game_mama(QWidget):
                             game_over_score.get_rect(centerx=screen_width // 2, centery=screen_height // 2))
 
             if clear==False:
+                clear_sound.play()
                 pygame.mixer.music.stop()
+                pygame.mixer.music.load('music/clear.mp3')
                 game_over_text = over_font.render('클리어', True, (255, 0, 0))
                 game_over_score = over_font.render('점수 : {}'.format(missed), True, (255, 0, 0))
                 screen.blit(game_over_text,
@@ -128,7 +130,7 @@ class Game_mama(QWidget):
             pygame.display.update()  # 화면을 계속해서 호출해야 함
             clock.tick(60)
 
-        pygame.time.delay(2000)
+        pygame.time.delay(5000)
         pygame.quit()
 
     def closeEvent(self, event):
