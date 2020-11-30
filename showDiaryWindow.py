@@ -8,23 +8,26 @@ class ShowDiaryWindow(QMainWindow):
         self.choice_window=choice_window
 
         # 윈도우 설정
-
-
         self.setupUI()
 
     def setupUI(self):
-
         showTitle=QLabel("내가 쓴 일기", self)
         showTitle.resize(1200, 100)
+        font1 = showTitle.font()
+        font1.setPointSize(25)
+        font1.setBold(True)
+        showTitle.setFont(font1)
         showTitle.setAlignment(Qt.AlignCenter)
 
-        goHome = QPushButton("홈으로", self)
-        goHome.setGeometry(650, 650, 80, 30)
-        goHome.clicked.connect(self.exist)
-
         btnShow=QPushButton("일기 보기", self)
-        btnShow.setGeometry(450, 650, 80, 30)
+        btnShow.setGeometry(400, 650, 80, 30)
         btnShow.clicked.connect(self.showDiary)
+
+        goHome = QPushButton("", self)
+        goHome.move(800, 600)
+        goHome.resize(128, 128)
+        goHome.setStyleSheet("background-image : url(image/home.png);")
+        goHome.clicked.connect(self.exist)
 
         self.show_contents=QLabel(self)
         self.show_contents.setAlignment(Qt.AlignCenter)
