@@ -1,4 +1,6 @@
 import sys
+
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.uic.properties import QtGui
@@ -13,6 +15,7 @@ class CalendarWindow(QMainWindow):
         # 윈도우 설정
         self.setGeometry(300, 100, 1200, 800)  # x, y, w, h
         self.setStyleSheet("background-image : url(image/cal_back.jpg);")
+        self.setWindowIcon(QIcon('image/baby.png'))
         self.setWindowTitle('일기 쓰기')
 
         # CalendarWidget 위젯 화면에 표시

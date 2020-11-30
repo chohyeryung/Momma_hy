@@ -1,6 +1,11 @@
 import sys
+
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+
+from Upload_diary import Upload
+
 
 class ShowDiaryWindow(QMainWindow):
     def __init__(self,choice_window):
@@ -42,6 +47,7 @@ class ShowDiaryWindow(QMainWindow):
         self.setLayout(layout)
 
         self.setGeometry(300, 100, 1200, 800)  # x, y, w, h
+        self.setWindowIcon(QIcon('image/baby.png'))
         self.setWindowTitle('일기 보기')
         self.show()
 
