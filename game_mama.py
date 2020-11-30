@@ -195,6 +195,15 @@ class Game_mama(QWidget):
             Total_score_show = game_font.render("Score : {}".format(total_score), True, (255, 255, 255))
             screen.blit(Total_score_show, (140, 20))
 
+            healthvalue = 100
+
+            health_bar = pygame.image.load("image/healt.png")
+            health = pygame.image.load("image/healt_minus.png")
+
+            screen.blit(health_bar, (5, 5))
+            for health1 in range(healthvalue):
+                screen.blit(health, (health1 + 3, 3))
+
             #지정된 시간보다 시간을 초과한다면
             if total_time - ellipsis_time <= 0:
                 running=False
@@ -203,6 +212,9 @@ class Game_mama(QWidget):
                 running = False
 
             elif total_score==0:
+                running = False
+
+            elif healthvalue <= 0:
                 running = False
 
             if (running == False):
