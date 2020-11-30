@@ -61,8 +61,6 @@ class Choice(QMainWindow):
 
     def GoGame(self):
         self.gamew = Game_mama()
-        self.gamew.show()
-
 
 if __name__=="__main__":
     app=QApplication(sys.argv)

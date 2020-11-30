@@ -18,6 +18,8 @@ class Game_mama(QWidget):
         #총 시간
         total_time = 15
 
+        large_font = pygame.font.SysFont('malgungothic', 72)
+
         #닿은 횟수
         count = 0
 
@@ -52,16 +54,6 @@ class Game_mama(QWidget):
         #이동 좌표
         to_x = 0
 
-        #이미지 랜덤
-        bad1 = pygame.image.load("image/coffee.png")
-        bad2 = pygame.image.load("image/honey.png")
-        bad3 = pygame.image.load("image/raman.png")
-        bad4 = pygame.image.load("image/spicy.JPG")
-
-        bad_image = [bad1, bad2, bad3, bad4]
-        #
-        # random_img = random.randint(0, bad_image.length())
-
         #캐릭터 이동 속도
         character_speed = 9
 
@@ -82,17 +74,17 @@ class Game_mama(QWidget):
         enemy_y_pos2 = 0
         enemy_speed = 7
 
-        enemy3 = pygame.image.load("image/apple.png")
-        enemy3_size = enemy3.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
-        enemy3_width = enemy3_size[0]  # 가로크기
-        enemy3_height = enemy3_size[1]  # 세로 크기
-        enemy_x_pos3 = random.randint(0, screen_width - enemy3_width)
-        enemy_y_pos3 = 0
+        good = pygame.image.load("image/apple.png")
+        good_size = good.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
+        good_width = good_size[0]  # 가로크기
+        good_height = good_size[1]  # 세로 크기
+        goody_x_pos3 = random.randint(0, screen_width - good_width)
+        goody_y_pos3 = 0
         enemy_speed = 7
 
         print(enemy_x_pos1)
         print(enemy_x_pos2)
-        print(enemy_x_pos3)
+        print(goody_x_pos3)
 
         #이벤트 루프 없으면 창 바로 꺼짐
         running = True
@@ -124,7 +116,7 @@ class Game_mama(QWidget):
 
             enemy_y_pos1 += enemy_speed
             enemy_y_pos2 += enemy_speed
-            enemy_y_pos3 += enemy_speed
+            goody_y_pos3 += enemy_speed
 
             if enemy_y_pos1 > screen_height:
                 enemy_y_pos1 = 0
@@ -140,12 +132,12 @@ class Game_mama(QWidget):
                 enemy_y_pos2 = 0
                 enemy_x_pos2 = random.randint(0, screen_width - enemy2_width)
 
-            if enemy_y_pos3 > screen_height:
-                enemy_y_pos3 = 0
-                enemy_x_pos3 = random.randint(0, screen_width - enemy3_width)
-                enemy_y_pos3 > screen_height
-                enemy_y_pos3 = 0
-                enemy_x_pos3 = random.randint(0, screen_width - enemy3_width)
+            if goody_y_pos3 > screen_height:
+                goody_y_pos3 = 0
+                goody_x_pos3 = random.randint(0, screen_width - good_width)
+                goody_y_pos3 > screen_height
+                goody_y_pos3 = 0
+                goody_x_pos3 = random.randint(0, screen_width - good_width)
 
             #충돌 처리
             character_reat = character.get_rect()
@@ -160,20 +152,9 @@ class Game_mama(QWidget):
             enemy2_reat.left = enemy_x_pos2
             enemy2_reat.top = enemy_y_pos2
 
-            enemy3_reat = enemy3.get_rect()
-            enemy3_reat.left = enemy_x_pos3
-            enemy3_reat.top = enemy_y_pos3
-
-
-            #충돌 체크
-            # enemy_rects=[enemy1_reat, enemy2_reat, enemy3_reat]
-            # collision_i=-1
-            # for i, enemy_reat in enumerate(enemy_rects):
-            #     if character_reat.colliderect(enemy_reat) and collision_i==-1:
-            #         total_score-=10
-            #         collision_i=i
-            #     else:
-            #         collision_i=-1
+            good_reat = good.get_rect()
+            good_reat.left = goody_x_pos3
+            good_reat.top = goody_y_pos3
 
             if character_reat.colliderect(enemy1_reat):
                 count += 1
@@ -190,19 +171,19 @@ class Game_mama(QWidget):
                 total_score -= 10
                 running = True
 
-            elif character_reat.colliderect(enemy3_reat):
+            elif character_reat.colliderect(good_reat):
                 count += 1
                 print(count)
-                print("나쁜 음식을 먹었습니다!")
-                total_score -= 10
+                print("좋은 음식을 먹었습니다!")
+                total_score += 10
                 running = True
 
             # screen.fill(()) RGB컬러로도 화면 채우기 가능
             screen.blit(background, (0,0))
             screen.blit(character, (character_x_pos, character_y_pos))#캐릭터 그리기
-            screen.blit(enemy1, (enemy_x_pos1, enemy_y_pos1)) #적 그리기
-            screen.blit(enemy2, (enemy_x_pos2, enemy_y_pos2)) #적 그리기
-            screen.blit(enemy3, (enemy_x_pos3, enemy_y_pos3)) #적 그리기
+            screen.blit(enemy1, (enemy_x_pos1, enemy_y_pos1)) #나쁜 음식 그리기
+            screen.blit(enemy2, (enemy_x_pos2, enemy_y_pos2)) #나쁜 음식 그리기
+            screen.blit(good, (goody_x_pos3, goody_y_pos3)) #좋은 음식 그리기
 
             ellipsis_time = (pygame.time.get_ticks() - start_ticks) / 1000 #초 단위로 지난 시간 표시
 
@@ -222,19 +203,24 @@ class Game_mama(QWidget):
             elif total_score==0:
                 running = False
 
+            if (running == False):
+                print('good')
+                game_over_image = large_font.render('게임 종료', True, (255, 0, 0))
+                screen.blit(game_over_image, (75, 200))
+
             pygame.display.update()  # 화면을 계속해서 호출해야 함
 
+        pygame.time.delay(2000)
+        pygame.quit()
 
-        self.activeMessage()
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Message', 'Are you sure to quit?',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
-    #     #py게임 종료
-    def activeMessage(self):
-        self.reply = QMessageBox.question(self, 'Game over', '게임이 종료되었습니다.',
-                                     QMessageBox.Yes)
-
-
-        if self.reply == QMessageBox.Yes:
-            pygame.quit()
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
 
 if __name__=="__main__":
