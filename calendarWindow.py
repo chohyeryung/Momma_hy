@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.uic.properties import QtGui
 
 from Upload_diary import Upload
 
@@ -11,6 +12,7 @@ class CalendarWindow(QMainWindow):
 
         # 윈도우 설정
         self.setGeometry(300, 100, 1200, 800)  # x, y, w, h
+        self.setStyleSheet("background-image : url(image/cal_back.jpg);")
         self.setWindowTitle('일기 쓰기')
 
         # CalendarWidget 위젯 화면에 표시
@@ -32,6 +34,7 @@ class CalendarWindow(QMainWindow):
         self.b.insertPlainText("일기를 작성해요주세용.\n")
         # self.contents=self.b.QPlainTextEdit.toPlainText()
         self.b.setGeometry(120, 420, 970, 200)
+        self.b.setStyleSheet("background-image : url(image/cal_input.jpg);")
 
         self.setupUI()
 
@@ -51,6 +54,11 @@ class CalendarWindow(QMainWindow):
         cal_date = self.cal.selectedDate()
         strDate = cal_date.toString('yyyy년 ' + 'MM월 ' +'dd일')  # QDate 를 str
         self.calendar_label.setAlignment(Qt.AlignCenter)
+        font1=self.calendar_label.font()
+        font1.setPointSize(25)
+        font1.setFamily("Rockwell Nova Light")
+        font1.setBold(True)
+        self.calendar_label.setFont(font1)
         self.calendar_label.setText(strDate)
 
     # 달력에서 현재를 선택
