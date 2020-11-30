@@ -16,7 +16,7 @@ class Game_mama(QWidget):
         game_font = pygame.font.Font(None, 40) #폰트 ,크기
 
         #총 시간
-        total_time = 15
+        total_time = 100
 
         large_font = pygame.font.SysFont('malgungothic', 72)
 
@@ -24,7 +24,7 @@ class Game_mama(QWidget):
         count = 0
 
         # 총 점수
-        total_score = 100
+        total_score = 1000000
         #시작 시간 정보
         start_ticks = pygame.time.get_ticks()
 
@@ -56,6 +56,11 @@ class Game_mama(QWidget):
 
         #캐릭터 이동 속도
         character_speed = 9
+
+        heart = pygame.image.load("image/heart.png")
+        heart_size = heart.get_rect().size
+        heart_width = heart_size[0]
+        heart_height = heart_size[1]
 
         #나쁜 음식
         enemy1 = pygame.image.load("image/sandwich.png")
@@ -163,7 +168,6 @@ class Game_mama(QWidget):
                 total_score -= 10
                 running = True
 
-
             elif character_reat.colliderect(enemy2_reat):
                 count += 1
                 print(count)
@@ -185,23 +189,25 @@ class Game_mama(QWidget):
             screen.blit(enemy2, (enemy_x_pos2, enemy_y_pos2)) #나쁜 음식 그리기
             screen.blit(good, (goody_x_pos3, goody_y_pos3)) #좋은 음식 그리기
 
-            ellipsis_time = (pygame.time.get_ticks() - start_ticks) / 1000 #초 단위로 지난 시간 표시
 
-            #출력할 글자 ,True, 글자 색 설정
-            timer= game_font.render("Time : {}".format(int(total_time - ellipsis_time)), True, (255,255,255))
-            screen.blit(timer, (10, 20))
-            Total_score_show = game_font.render("Score : {}".format(total_score), True, (255, 255, 255))
-            screen.blit(Total_score_show, (140, 20))
+
+            ellipsis_time = (pygame.time.get_ticks() - start_ticks) / 1000  # 초 단위로 지난 시간 표시
+            # 출력할 글자 ,True, 글자 색 설정
+            timer = game_font.render("Time : {}".format(int(total_time - ellipsis_time)), True, (255, 255, 255))
+            scroe = game_font.render("Scroe: {}".format(int(total_score)), True, (255, 255, 255))
+            screen.blit(timer, (10, 40))
+            screen.blit(scroe, (170, 40))
+            screen.blit(heart, (180, 30))
 
             #지정된 시간보다 시간을 초과한다면
             if total_time - ellipsis_time <= 0:
                 running=False
 
-            elif total_time==0:
+            elif total_time == 0:
                 running = False
 
-            elif total_score==0:
-                running = False
+            elif total_score == 0:
+                running =False
 
             if (running == False):
                 print('good')
