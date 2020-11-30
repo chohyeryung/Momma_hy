@@ -8,7 +8,7 @@ class Game_mama(QWidget):
     def __init__(self):
         super().__init__()
         pygame.init() #초기화 반드시 필요함
-        self.choice_window=choice_window
+        self.choice_window= choice_window
         self.initUI()
 
     def initUI(self):
