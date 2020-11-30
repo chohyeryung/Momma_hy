@@ -26,6 +26,13 @@ class Game_mama(QWidget):
         screen = pygame.display.set_mode((screen_width, screen_height))  # 화면 크기 설정
         clock = pygame.time.Clock()
 
+        pygame.mixer.init()
+        pygame.mixer.music.load('music/back_bgm.mp3') #배경 음악
+        pygame.mixer.music.play(-1) #-1: 무한 반복, 0: 한번
+        # missile_sound = pygame.mixer.Sound('missile.wav') #사운드
+        # explosion_sound = pygame.mixer.Sound('explosion.wav')
+        # game_over_sound = pygame.mixer.Sound('game_over.wav')
+
         bad_image = pygame.image.load("image/pepper.png")
         bads = []
         for i in range(3):
@@ -127,6 +134,7 @@ class Game_mama(QWidget):
                 running = False
 
             if running == False:
+                pygame.mixer.music.stop()
                 game_over_text = over_font.render('게임 종료', True, (255, 0, 0))
                 game_over_score = over_font.render('점수 : {}'.format(missed), True, (255, 0, 0))
                 screen.blit(game_over_text,
