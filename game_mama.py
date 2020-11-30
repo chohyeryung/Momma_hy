@@ -11,20 +11,20 @@ class Game_mama(QWidget):
         self.initUI()
 
     def initUI(self):
-
+        BLACJ
         #폰트
         game_font = pygame.font.Font(None, 40) #폰트 ,크기
 
         #총 시간
-        total_time = 100
+        total_time = 15
 
-        large_font = pygame.font.SysFont('malgungothic', 72)
+        large_font = pygame.font.SysFont(None, 72)
 
         #닿은 횟수
         count = 0
 
         # 총 점수
-        total_score = 1000000
+        total_score = 0
         #시작 시간 정보
         start_ticks = pygame.time.get_ticks()
 
@@ -57,156 +57,208 @@ class Game_mama(QWidget):
         #캐릭터 이동 속도
         character_speed = 9
 
-        heart = pygame.image.load("image/heart.png")
-        heart_size = heart.get_rect().size
-        heart_width = heart_size[0]
-        heart_height = heart_size[1]
-
         #나쁜 음식
-        enemy1 = pygame.image.load("image/sandwich.png")
-        enemy1_size = enemy1.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
-        enemy1_width = enemy1_size[0]  # 가로크기
-        enemy1_height = enemy1_size[1]  # 세로 크기
-        enemy_x_pos1 = random.randint(0, screen_width - enemy1_width)
-        enemy_y_pos1 = 0
-        enemy_speed = 7
+        enemy_image = pygame.image.load("image/sandwich.png")
+        enemy1s = []
 
-        enemy2 = pygame.image.load("image/honey.png")
-        enemy2_size = enemy2.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
-        enemy2_width = enemy2_size[0]  # 가로크기
-        enemy2_height = enemy2_size[1]  # 세로 크기
-        enemy_x_pos2 = random.randint(0, screen_width - enemy2_width)
-        enemy_y_pos2 = 0
-        enemy_speed = 7
+        for i in range(2):
+            enemy = enemy_image.get_rect(left=random.randint(0, screen_width), top = -100)
+            dy = random.randint(3, 9)
+            enemy1s.append((enemy, dy))
 
-        good = pygame.image.load("image/apple.png")
-        good_size = good.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
-        good_width = good_size[0]  # 가로크기
-        good_height = good_size[1]  # 세로 크기
-        goody_x_pos3 = random.randint(0, screen_width - good_width)
-        goody_y_pos3 = 0
-        enemy_speed = 7
+            while True:  # 게임 루프
+                screen.fill(BLACK)  # 단색으로 채워 화면 지우기
 
-        print(enemy_x_pos1)
-        print(enemy_x_pos2)
-        print(goody_x_pos3)
+                # 변수 업데이트
+
+                event = pygame.event.poll()  # 이벤트 처리
+                if event.type == pygame.QUIT:
+                    break
+                elif event.type == pygame.KEYDOWN and not game_over:
+                    if event.key == pygame.K_LEFT:
+                        girl.left -= 5
+                    elif event.key == pygame.K_RIGHT:
+                        girl.left += 5
+
+                if not game_over:
+                    for bomb, dy in bombs:
+                        bomb.top += dy
+                        if bomb.top > SCREEN_HEIGHT:
+                            bombs.remove((bomb, dy))
+                            bomb = bomb_image.get_rect(left=random.randint(0, SCREEN_WIDTH), top=-100)
+                            dy = random.randint(3, 9)
+                            bombs.append((bomb, dy))
+                            score += 1
+
+                    if girl.left < 0:
+                        girl.left = 0
+                    elif girl.right > SCREEN_WIDTH:
+                        girl.right = SCREEN_WIDTH
+
+                    for bomb, dy in bombs:
+                        if bomb.colliderect(girl):
+                            game_over = True
+                            pygame.mixer.music.stop()
+                            game_over_sound.play()
+
+        # enemy1_size = enemy_image.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
+        # enemy1_width = enemy1_size[0]  # 가로크기
+        # enemy1_height = enemy1_size[1]  # 세로 크기
+        # enemy_x_pos1 = random.randint(0, screen_width - enemy1_width)
+        # enemy_y_pos1 = 0
+        # enemy_speed = 7
+
+        # enemy2 = pygame.image.load("image/honey.png")
+        # enemy2_size = enemy2.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
+        # enemy2_width = enemy2_size[0]  # 가로크기
+        # enemy2_height = enemy2_size[1]  # 세로 크기
+        # enemy_x_pos2 = random.randint(0, screen_width - enemy2_width)
+        # enemy_y_pos2 = 0
+        # enemy_speed = 7
+        #
+        # good = pygame.image.load("image/apple.png")
+        # good_size = good.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
+        # good_width = good_size[0]  # 가로크기
+        # good_height = good_size[1]  # 세로 크기
+        # goody_x_pos3 = random.randint(0, screen_width - good_width)
+        # goody_y_pos3 = 0
+        # enemy_speed = 7
+        #
+        # print(enemy_x_pos1)
+        # print(enemy_x_pos2)
+        # print(goody_x_pos3)
 
         #이벤트 루프 없으면 창 바로 꺼짐
-        running = True
-        while running:
-            dt = clock.tick(60)
-            print("fps : " + str(clock.get_fps()))
+        # running = True
+        # while running:
+        #     dt = clock.tick(60)
+        #     print("fps : " + str(clock.get_fps()))
+        #
+        #     for event in pygame.event.get(): #어떤 이벤트가 발생하였는지
+        #         if event.type == pygame.QUIT: # 창이 닫히는 이벤트가 실행되었는지
+        #             running = False
+        #
+        #         if event.type == pygame.KEYDOWN:
+        #             if event.key == pygame.K_LEFT:
+        #                 to_x -= character_speed
+        #             elif event.key == pygame.K_RIGHT:
+        #                 to_x += character_speed
+        #
+        #         if event.type == pygame.KEYUP: # 키보드에서 손을 땠을 시
+        #             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+        #                 to_x = 0
+        #
+        #     character_x_pos += to_x
+        #
+        #     #캐릭터 위치
+        #     if character_x_pos < 0:
+        #         character_x_pos = 0
+        #     elif character_x_pos > screen_width - character_width:
+        #         character_x_pos = screen_width - character_width
+        #
+        #     enemy_y_pos1 += enemy_speed
+        #     # enemy_y_pos2 += enemy_speed
+        #     # goody_y_pos3 += enemy_speed
+        #
+        #     if enemy_y_pos1 > screen_height:
+        #         enemy_y_pos1 = 0
+        #         enemy_x_pos1 = random.randint(0, screen_width - enemy1_width)
+        #         enemy_y_pos1 > screen_height
+        #         enemy_y_pos1 = 0
+        #         enemy_x_pos1 = random.randint(0, screen_width - enemy1_width)
 
-            for event in pygame.event.get(): #어떤 이벤트가 발생하였는지
-                if event.type == pygame.QUIT: # 창이 닫히는 이벤트가 실행되었는지
-                    running = False
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        to_x -= character_speed
-                    elif event.key == pygame.K_RIGHT:
-                        to_x += character_speed
-
-                if event.type == pygame.KEYUP: # 키보드에서 손을 땠을 시
-                    if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                        to_x = 0
-
-            character_x_pos += to_x
-
-            #캐릭터 위치
-            if character_x_pos < 0:
-                character_x_pos = 0
-            elif character_x_pos > screen_width - character_width:
-                character_x_pos = screen_width - character_width
-
-            enemy_y_pos1 += enemy_speed
-            enemy_y_pos2 += enemy_speed
-            goody_y_pos3 += enemy_speed
-
-            if enemy_y_pos1 > screen_height:
-                enemy_y_pos1 = 0
-                enemy_y_pos1 > screen_height
-                enemy_x_pos1 = random.randint(0, screen_width - enemy1_width)
-
-            if enemy_y_pos2 > screen_height:
-                enemy_y_pos2 = 0
-                enemy_y_pos2 > screen_height
-                enemy_x_pos2 = random.randint(0, screen_width - enemy2_width)
-
-            if goody_y_pos3 > screen_height:
-                goody_y_pos3 = 0
-                goody_x_pos3 = random.randint(0, screen_width - good_width)
-                goody_y_pos3 > screen_height
-
+            # if enemy_y_pos2 > screen_height:
+            #     enemy_y_pos2 = 0
+            #     enemy_x_pos2 = random.randint(0, screen_width - enemy2_width)
+            #     enemy_y_pos2 > screen_height
+            #     enemy_y_pos2 = 0
+            #     enemy_x_pos2 = random.randint(0, screen_width - enemy2_width)
+            #
+            # if goody_y_pos3 > screen_height:
+            #     goody_y_pos3 = 0
+            #     goody_x_pos3 = random.randint(0, screen_width - good_width)
+            #     goody_y_pos3 > screen_height
+            #     goody_y_pos3 = 0
+            #     goody_x_pos3 = random.randint(0, screen_width - good_width)
 
             #충돌 처리
             character_reat = character.get_rect()
             character_reat.left = character_x_pos
             character_reat.top = character_y_pos
 
-            enemy1_reat = enemy1.get_rect()
-            enemy1_reat.left = enemy_x_pos1
-            enemy1_reat.top = enemy_y_pos1
+            # enemy1_reat = enemy_image.get_rect()
+            # enemy1_reat.left = enemy_x_pos1
+            # enemy1_reat.top = enemy_y_pos1
 
-            enemy2_reat = enemy2.get_rect()
-            enemy2_reat.left = enemy_x_pos2
-            enemy2_reat.top = enemy_y_pos2
+            # enemy2_reat = enemy2.get_rect()
+            # enemy2_reat.left = enemy_x_pos2
+            # enemy2_reat.top = enemy_y_pos2
+            #
+            # good_reat = good.get_rect()
+            # good_reat.left = goody_x_pos3
+            # good_reat.top = goody_y_pos3
 
-            good_reat = good.get_rect()
-            good_reat.left = goody_x_pos3
-            good_reat.top = goody_y_pos3
+            #충돌 체크
+            # if character_reat.colliderect(enemy1_reat):
+            #     count += 1
+            #     print(count)
+            #     print("나쁜 음식을 먹었습니다!")
+            #     total_score -= 10
+            #     healthvalue -= 100
+            #     running = True
 
-            if character_reat.colliderect(enemy1_reat):
-                count += 1
-                print(count)
-                print("나쁜 음식을 먹었습니다!")
-                total_score -= 10
-                running = True
-
-            elif character_reat.colliderect(enemy2_reat):
-                count += 1
-                print(count)
-                print("나쁜 음식을 먹었습니다!")
-                total_score -= 10
-                running = True
-
-            elif character_reat.colliderect(good_reat):
-                count += 1
-                print(count)
-                print("좋은 음식을 먹었습니다!")
-                total_score += 10
-                running = True
+            #
+            # elif character_reat.colliderect(enemy2_reat):
+            #     count += 1
+            #     print(count)
+            #     print("나쁜 음식을 먹었습니다!")
+            #     total_score -= 10
+            #     healthvalue -= 100
+            #     running = True
+            #
+            # elif character_reat.colliderect(good_reat):
+            #     count += 1
+            #     print(count)
+            #     print("좋은 음식을 먹었습니다!")
+            #     total_score += 10
+            #     healthvalue += 100
+            #     running = True
 
             # screen.fill(()) RGB컬러로도 화면 채우기 가능
             screen.blit(background, (0,0))
             screen.blit(character, (character_x_pos, character_y_pos))#캐릭터 그리기
-            screen.blit(enemy1, (enemy_x_pos1, enemy_y_pos1)) #나쁜 음식 그리기
-            screen.blit(enemy2, (enemy_x_pos2, enemy_y_pos2)) #나쁜 음식 그리기
-            screen.blit(good, (goody_x_pos3, goody_y_pos3)) #좋은 음식 그리기
+            # screen.blit(enemy1, (enemy_x_pos1, enemy_y_pos1)) #나쁜 음식 그리기
+            # screen.blit(enemy2, (enemy_x_pos2, enemy_y_pos2)) #나쁜 음식 그리기
+            # screen.blit(good, (goody_x_pos3, goody_y_pos3)) #좋은 음식 그리기
 
-            ellipsis_time = (pygame.time.get_ticks() - start_ticks) / 1000  # 초 단위로 지난 시간 표시
-            # 출력할 글자 ,True, 글자 색 설정
-            timer = game_font.render("Time : {}".format(int(total_time - ellipsis_time)), True, (255, 255, 255))
-            scroe = game_font.render("score: ", True, (255, 255, 255))
+            ellipsis_time = (pygame.time.get_ticks() - start_ticks) / 1000 #초 단위로 지난 시간 표시
+
+            #출력할 글자 ,True, 글자 색 설정
+            timer= game_font.render("Time : {}".format(int(total_time - ellipsis_time)), True, (255,255,255))
             screen.blit(timer, (10, 20))
-            screen.blit(scroe, (170, 20))
+            Total_score_show = game_font.render("Score : {}".format(total_score), True, (255, 255, 255))
+            screen.blit(Total_score_show, (140, 20))
+
+            healthvalue = 100
 
             health_bar = pygame.image.load("image/healt.png")
             health = pygame.image.load("image/healt_minus.png")
-
-            screen.blit(health_bar, (5,5))
+            screen.blit(health_bar, (5, 5))
             for health1 in range(healthvalue):
-                screen.blit(health, (health1+8, 8))
+                screen.blit(health, (health1 + 8, 8))
 
             #지정된 시간보다 시간을 초과한다면
             if total_time - ellipsis_time <= 0:
                 running=False
 
-            elif total_time == 0:
+            elif total_time==0:
                 running = False
 
-            elif total_score == 0:
-                running =False
+            elif total_score==0:
+                running = False
+
+            elif healthvalue <= 0:
+                running = False
 
             if (running == False):
                 print('good')
