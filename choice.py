@@ -4,6 +4,7 @@ from PyQt5.QtGui import QIcon
 from calendar import Calendar
 
 from calendarWindow import CalendarWindow
+from chooseLevel import ChooseLevel
 from game_mama import Game_mama
 from showDiaryWindow import ShowDiaryWindow
 
@@ -61,7 +62,9 @@ class Choice(QMainWindow):
         self.hide()
 
     def GoGame(self):
-        self.gamew = Game_mama()
+        self.clevel = ChooseLevel(self)
+        self.clevel.show()
+        self.hide()
 
 if __name__=="__main__":
     app=QApplication(sys.argv)
