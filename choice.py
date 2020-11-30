@@ -47,6 +47,7 @@ class Choice(QMainWindow):
         self.setWindowTitle('Momma')
         self.setWindowIcon(QIcon('image/baby.png'))
         self.setGeometry(300,100,1200,800)
+        self.setStyleSheet("background-image : url(image/choice_back.jpg);")
         self.show()
 
     def GoDiary(self):
@@ -60,9 +61,7 @@ class Choice(QMainWindow):
         self.hide()
 
     def GoGame(self):
-        self.gamew = Game_mama(self)
-        self.gamew.show()
-        self.hide
+        self.gamew = Game_mama()
 
 if __name__=="__main__":
     app=QApplication(sys.argv)
