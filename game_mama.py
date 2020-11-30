@@ -147,15 +147,15 @@ class Game_mama(QWidget):
 
             enemy1_reat = enemy1.get_rect()
             enemy1_reat.left = enemy_x_pos1
-            enemy1_reat.top = enemy_y_pos1
+            enemy1_reat.top = enemy_y_pos1 - 70
 
             enemy2_reat = enemy2.get_rect()
             enemy2_reat.left = enemy_x_pos2
-            enemy2_reat.top = enemy_y_pos2
+            enemy2_reat.top = enemy_y_pos2- 70
 
             enemy3_reat = enemy3.get_rect()
             enemy3_reat.left = enemy_x_pos3
-            enemy3_reat.top = enemy_y_pos3
+            enemy3_reat.top = enemy_y_pos3- 70
 
             #scorea = 0
             #scroe = 100
