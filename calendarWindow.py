@@ -12,6 +12,7 @@ class CalendarWindow(QMainWindow):
         super().__init__()
         self.choice_window=choice_window
 
+
         # 윈도우 설정
         self.setGeometry(300, 100, 1200, 800)  # x, y, w, h
         self.setStyleSheet("background-image : url(image/cal_back.jpg);")
@@ -23,6 +24,7 @@ class CalendarWindow(QMainWindow):
         self.cal.setGeometry(120, 50, 970, 300)
         self.cal.setGridVisible(True)
         self.cal.selectionChanged.connect(self.calendar_change)
+        self.cal.setVerticalHeaderFormat(0)
 
         # min max 기간 설정
         #self.cal.setMinimumDate(QDate(2020, 8, 25))
