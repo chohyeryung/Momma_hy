@@ -125,24 +125,19 @@ class Game_mama(QWidget):
 
             if enemy_y_pos1 > screen_height:
                 enemy_y_pos1 = 0
-                enemy_x_pos1 = random.randint(0, screen_width - enemy1_width)
                 enemy_y_pos1 > screen_height
-                enemy_y_pos1 = 0
                 enemy_x_pos1 = random.randint(0, screen_width - enemy1_width)
 
             if enemy_y_pos2 > screen_height:
                 enemy_y_pos2 = 0
-                enemy_x_pos2 = random.randint(0, screen_width - enemy2_width)
                 enemy_y_pos2 > screen_height
-                enemy_y_pos2 = 0
                 enemy_x_pos2 = random.randint(0, screen_width - enemy2_width)
 
             if goody_y_pos3 > screen_height:
                 goody_y_pos3 = 0
                 goody_x_pos3 = random.randint(0, screen_width - good_width)
                 goody_y_pos3 > screen_height
-                goody_y_pos3 = 0
-                goody_x_pos3 = random.randint(0, screen_width - good_width)
+
 
             #충돌 처리
             character_reat = character.get_rect()
@@ -189,15 +184,19 @@ class Game_mama(QWidget):
             screen.blit(enemy2, (enemy_x_pos2, enemy_y_pos2)) #나쁜 음식 그리기
             screen.blit(good, (goody_x_pos3, goody_y_pos3)) #좋은 음식 그리기
 
-
-
             ellipsis_time = (pygame.time.get_ticks() - start_ticks) / 1000  # 초 단위로 지난 시간 표시
             # 출력할 글자 ,True, 글자 색 설정
             timer = game_font.render("Time : {}".format(int(total_time - ellipsis_time)), True, (255, 255, 255))
-            scroe = game_font.render("Scroe: {}".format(int(total_score)), True, (255, 255, 255))
-            screen.blit(timer, (10, 40))
-            screen.blit(scroe, (170, 40))
-            screen.blit(heart, (180, 30))
+            scroe = game_font.render("score: ", True, (255, 255, 255))
+            screen.blit(timer, (10, 20))
+            screen.blit(scroe, (170, 20))
+
+            health_bar = pygame.image.load("image/healt.png")
+            health = pygame.image.load("image/healt_minus.png")
+
+            screen.blit(health_bar, (5,5))
+            for health1 in range(healthvalue):
+                screen.blit(health, (health1+8, 8))
 
             #지정된 시간보다 시간을 초과한다면
             if total_time - ellipsis_time <= 0:
