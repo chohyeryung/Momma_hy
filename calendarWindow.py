@@ -30,6 +30,7 @@ class CalendarWindow(QMainWindow):
         self.cal.setGridVisible(True)
         self.cal.selectionChanged.connect(self.calendar_change)
         self.cal.setVerticalHeaderFormat(0)
+        self.cal.setStyleSheet("background-color : lightblue;")
 
         # min max 기간 설정
         #self.cal.setMinimumDate(QDate(2020, 8, 25))

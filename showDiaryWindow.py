@@ -29,6 +29,7 @@ class ShowDiaryWindow(QMainWindow):
         self.cal.setGridVisible(True)
         self.cal.selectionChanged.connect(self.calendar_change)
         self.cal.setVerticalHeaderFormat(0)
+        self.cal.setStyleSheet("background-color : lightblue;")
 
         # min max 기간 설정
         #self.cal.setMinimumDate(QDate(2020, 8, 25))
@@ -37,7 +38,6 @@ class ShowDiaryWindow(QMainWindow):
         # Calendar 에서 선택한 값 표시할 QLabel
         self.calendar_label = QLabel(self)
         self.calendar_label.setGeometry(120, 370, 970, 30)
-        self.calendar_label.setStyleSheet('background-color:#D3D3D3')
 
         self.b = QPlainTextEdit(self)
         self.b.insertPlainText("")
@@ -69,6 +69,7 @@ class ShowDiaryWindow(QMainWindow):
 
         btn4.setGeometry(450, 650, 80, 30)
         btn4.clicked.connect(self.updateDiary)
+
     # Calendar Open 함수
     @pyqtSlot()
     def calendar_change(self):
