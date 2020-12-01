@@ -4,164 +4,146 @@ import sys
 import pygame
 from PyQt5.QtWidgets import *
 
-class Game_mama(QWidget):
 
+class Game_mama(QWidget):
     def __init__(self):
-        pygame.init() #초기화 반드시 필요함
+        super().__init__()
+        pygame.init()  # 초기화 반드시 필요함
         self.initUI()
 
     def initUI(self):
-
-        #폰트
-        game_font = pygame.font.Font(None, 40) #폰트 ,크기
-
-        #총 시간
-        total_time = 15
-
-        #닿은 횟수
-        count = 0
-
-        # 총 점수
-        total_score = 0
-        #시작 시간 정보
-        start_ticks = pygame.time.get_ticks()
-
-        #창크기
+        # 폰트
+        clock = pygame.time.Clock()
+        over_font = pygame.font.Font('babyb.ttf', 50)  # 폰트 ,크기
+        small_font = pygame.font.Font('babyb.ttf', 36)
+        missed = 0
+        clear=True
+        running = True
+        BLUE = (8, 62, 163)
+        # 총 시간
+        total_time = 20
         screen_width = 480
         screen_height = 640
-
-        screen = pygame.display.set_mode((screen_width, screen_height))
-
-        #화면 타이틀 설정
-        pygame.display.set_caption("아이에게 좋은것만 먹이세요")
-
-        #초당 프레임
+        screen = pygame.display.set_mode((screen_width, screen_height))  # 화면 크기 설정
         clock = pygame.time.Clock()
 
-        #배경이미지 불러오기
+        pygame.mixer.init()
+        pygame.mixer.music.load('music/back_bgm.mp3') #배경 음악
+        pygame.mixer.music.play(-1) #-1: 무한 반복, 0: 한번
+        clear_sound = pygame.mixer.Sound('music/clear.mp3')
+        game_over_sound = pygame.mixer.Sound('music/sad_bgm.mp3')
+
+        bad_image = pygame.image.load("image/pepper.png")
+        bads = []
+        for i in range(3):
+            bad = bad_image.get_rect(left=random.randint(0, screen_width - bad_image.get_width()), top=-100)
+            dy = random.randint(3, 9)
+            bads.append((bad, dy))
+
+        baby_image = pygame.image.load("image/game_baby.png")
+        baby = baby_image.get_rect(centerx=screen_width // 2, bottom=screen_height)
+        # 시작 시간 정보
+        start_ticks = pygame.time.get_ticks()
+
+        # 화면 타이틀 설정
+        pygame.display.set_caption("아이에게 좋은것만 먹이세요")
+
+        # 배경이미지 불러오기
         background = pygame.image.load("image/game_back.jpg")
 
-        #캐릭터 불러오기
-        character= pygame.image.load("image/game_baby.png")
-        character_size = character.get_rect().size # 이미지 크기 구해옴 70*70 적당함
-        character_width = character_size[0] #가로크기
-        character_height = character_size[1] #세로 크기
-        character_x_pos = (screen_width / 2) -  (character_width / 2)#중앙에 배치
-        character_y_pos = screen_height - character_height # 가장 아래
+        # running=True이면
+        while running and clear:
+            screen.blit(background, (0, 0))
+            ellipsis_time = (pygame.time.get_ticks() - start_ticks) / 1000  # 초 단위로 지난 시간 표시
+            event = pygame.event.poll()  # 이벤트 처리
+            if event.type == pygame.QUIT:
+                break
+            pressed = pygame.key.get_pressed()
+            if pressed[pygame.K_LEFT] and not False:
+                baby.left -= 3
+            elif pressed[pygame.K_RIGHT] and not False:
+                baby.left += 3
 
-        #이동 좌표
-        to_x = 0
+            for bad, dy in bads:
+                bad.top += dy
+                if bad.top > screen_height:
+                    bads.remove((bad, dy))
+                    bad = bad_image.get_rect(left=random.randint(0, screen_width - bad_image.get_width()),
+                                             top=-100)
+                    dy = random.randint(3, 9)
+                    bads.append((bad, dy))
+                    missed += 1
 
-        #이미지 랜덤
-        bad1 = pygame.image.load("image/coffee.png")
-        bad2 = pygame.image.load("image/honey.png")
-        bad3 = pygame.image.load("image/raman.png")
-        bad4 = pygame.image.load("image/spicy.JPG")
+            if baby.left < 0:
+                baby.left = 0
+            elif baby.right > screen_width:
+                baby.right = screen_width
 
-        # bad_image = [bad1, bad2, bad3, bad4]
-        #
-        # random_img = random.randint(0, bad_image.length())
-
-        #캐릭터 이동 속도
-        character_speed = 9
-
-        #나쁜 음식
-        enemy = pygame.image.load("image/sandwich.png")
-        enemy_size = enemy.get_rect().size  # 이미지 크기 구해옴 70*70 적당함
-        enemy_width = enemy_size[0]  # 가로크기
-        enemy_height = enemy_size[1]  # 세로 크기
-        enemy_x_pos = random.randint(0, screen_width - enemy_width)
-        enemy_y_pos = 0
-        enemy_speed = 7
-
-        #좋은 캐릭터
-        goodfood = pygame.image.load("image/good.png")
-        goodfood_size = goodfood.get_rect().size
-        goodfood_width = goodfood_size[0]
-        goodfood_height = goodfood_size[1]
-        goodfood_x_pos = random.randint(0, screen_width - goodfood_width)
-        goodfood_y_pos = 0
-        goodfood_speed = 7
-
-        #이벤트 루프 없으면 창 바로 꺼짐
-        running = True
-        while running:
-            dt = clock.tick(60)
-            print("fps : " + str(clock.get_fps()))
-
-            for event in pygame.event.get(): #어떤 이벤트가 발생하였는지
-                if event.type == pygame.QUIT: # 창이 닫히는 이벤트가 실행되었는지
+            for bad, dy in bads:
+                if bad.colliderect(baby):
+                    # print('충돌')
+                    # print(bad)
+                    # print(fighter)
                     running = False
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        to_x -= character_speed
-                    elif event.key == pygame.K_RIGHT:
-                        to_x += character_speed
+            for bad, dy in bads:
+                screen.blit(bad_image, bad)
 
-                if event.type == pygame.KEYUP: # 키보드에서 손을 땠을 시
-                    if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                        to_x = 0
+            # for good, dy in goods:
+            #     screen.blit(good_image, good)
 
-            character_x_pos += to_x
+            screen.blit(baby_image, baby)
 
-            #캐릭터 위치
-            if character_x_pos < 0:
-                character_x_pos = 0
-            elif character_x_pos > screen_width - character_width:
-                character_x_pos = screen_width - character_width
-
-            enemy_y_pos += enemy_speed
-
-            if enemy_y_pos > screen_height:
-                enemy_y_pos = 0
-                enemy_x_pos = random.randint(0, screen_width - enemy_width)
-                enemy_y_pos > screen_height
-                enemy_y_pos = 0
-                enemy_x_pos = random.randint(0, screen_width - enemy_width)
-
-            #충돌 처리
-            character_reat = character.get_rect()
-            character_reat.left = character_x_pos
-            character_reat.top = character_y_pos
-
-            enemy_reat = enemy.get_rect()
-            enemy_reat.left = enemy_x_pos
-            enemy_reat.top = enemy_y_pos
-
-            #충돌 체크
-            if character_reat.colliderect(enemy_reat):
-                count += 1
-                print(count)
-                print("나쁜 음식을 먹었습니다!")
-                total_score = total_score - 5
-                running = False
-
-
-            # screen.fill(()) RGB컬러로도 화면 채우기 가능
-            screen.blit(background, (0,0))
-            screen.blit(character, (character_x_pos, character_y_pos))#캐릭터 그리기
-            screen.blit(enemy, (enemy_x_pos, enemy_y_pos)) #적 그리기
-
-            ellipsis_time = (pygame.time.get_ticks() - start_ticks) / 1000 #초 단위로 지난 시간 표시
-
-            #출력할 글자 ,True, 글자 색 설정
-            timer= game_font.render("Time : {}".format(int(total_time - ellipsis_time)), True, (255,255,255))
+            timer = small_font.render("Time : {}".format(int(total_time - ellipsis_time)), True, (255, 255, 255))
             screen.blit(timer, (10, 20))
+            missed_image = small_font.render('점수 {}'.format(missed), True, BLUE)
+            screen.blit(missed_image, missed_image.get_rect(right=screen_width - 10, top=10))
 
-            #지정된 시간보다 시간을 초과한다면
+            # 지정된 시간보다 시간을 초과한다면
             if total_time - ellipsis_time <= 0:
-                running = False
+                clear = False
+
+            elif total_time == 0:
+                clear = False
+
+            if running == False:
+                game_over_sound.play()
+                pygame.mixer.music.stop()
+                game_over_text = over_font.render('게임 종료', True, (255, 0, 0))
+                game_over_score = over_font.render('점수 : {}'.format(missed), True, (255, 0, 0))
+                screen.blit(game_over_text,
+                            game_over_text.get_rect(centerx=screen_width // 2, centery=screen_height // 2 - 50))
+                screen.blit(game_over_score,
+                            game_over_score.get_rect(centerx=screen_width // 2, centery=screen_height // 2))
+
+            if clear==False:
+                clear_sound.play()
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load('music/clear.mp3')
+                game_over_text = over_font.render('클리어', True, (255, 0, 0))
+                game_over_score = over_font.render('점수 : {}'.format(missed), True, (255, 0, 0))
+                screen.blit(game_over_text,
+                            game_over_text.get_rect(centerx=screen_width // 2, centery=screen_height // 2 - 50))
+                screen.blit(game_over_score,
+                            game_over_score.get_rect(centerx=screen_width // 2, centery=screen_height // 2))
 
             pygame.display.update()  # 화면을 계속해서 호출해야 함
+            clock.tick(60)
 
-        #끝나기 전 잠시 기달리는 시간
-        pygame.time.delay(3000)
-
-        #py게임 종료
+        pygame.time.delay(5000)
         pygame.quit()
 
-if __name__=="__main__":
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Message', 'Are you sure to quit?',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+
+
+if __name__ == "__main_":
     app = QApplication(sys.argv)
     gamee = Game_mama()
     gamee.show()

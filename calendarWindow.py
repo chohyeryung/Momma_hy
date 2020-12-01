@@ -1,7 +1,4 @@
 import sys
-
-import pymysql as pymysql
-from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
@@ -14,10 +11,10 @@ conn = pymysql.connect(
 )
 
 class CalendarWindow(QMainWindow):
-
     def __init__(self,choice_window):
         super().__init__()
         self.choice_window=choice_window
+
         # 윈도우 설정
         self.setGeometry(300, 100, 1200, 800)  # x, y, w, h
         self.setStyleSheet("background-image : url(image/cal_back.jpg);")
