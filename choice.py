@@ -5,8 +5,8 @@ from calendar import Calendar
 
 from calendarWindow import CalendarWindow
 from chooseLevel import ChooseLevel
-from game_mama import Game_mama
 from showDiaryWindow import ShowDiaryWindow
+
 
 class Choice(QMainWindow):
     def __init__(self):
