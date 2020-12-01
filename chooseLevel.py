@@ -30,7 +30,6 @@ class ChooseLevel(QMainWindow):
         LowLevel.setStyleSheet("Color : red")
         LowLevel.clicked.connect(self.GoLowGame)
 
-
         MiddleLevel.move(500, 300)
         MiddleLevel.resize(200, 200)
         font1 = MiddleLevel.font()
@@ -39,7 +38,6 @@ class ChooseLevel(QMainWindow):
         MiddleLevel.setFont(font1)
         MiddleLevel.setStyleSheet("Color : red")
         MiddleLevel.clicked.connect(self.GoMdGame)
-
 
         HighLevel.move(200, 300)
         HighLevel.resize(200, 200)
