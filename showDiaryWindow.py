@@ -6,8 +6,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.uic.properties import QtGui
 
-from Upload_diary import Upload
-
 conn = pymysql.connect(
     host='localhost',
     user='root',
@@ -15,8 +13,8 @@ conn = pymysql.connect(
     db='mama',
     charset='utf8'
 )
-class CalendarWindow(QMainWindow):
 
+class ShowDiaryWindow(QMainWindow):
     def __init__(self,choice_window):
         super().__init__()
         self.choice_window=choice_window
@@ -24,7 +22,7 @@ class CalendarWindow(QMainWindow):
         self.setGeometry(300, 100, 1200, 800)  # x, y, w, h
         self.setStyleSheet("background-image : url(image/cal_back.jpg);")
         self.setWindowIcon(QIcon('image/baby.png'))
-        self.setWindowTitle('일기 쓰기')
+        self.setWindowTitle('일기 보기')
 
         # CalendarWidget 위젯 화면에 표시
         self.cal = QCalendarWidget(self)
@@ -43,26 +41,30 @@ class CalendarWindow(QMainWindow):
         self.calendar_label.setStyleSheet('background-color:#D3D3D3')
 
         self.b = QPlainTextEdit(self)
-        self.b.insertPlainText("일기를 작성해요주세용.\n")
+        self.b.insertPlainText("")
         font1 = self.b.font()
         font1.setPointSize(20)
         font1.setBold(True)
         self.b.setFont(font1)
+        # self.contents=self.b.QPlainTextEdit.toPlainText()
         self.b.setGeometry(120, 420, 970, 200)
         self.b.setStyleSheet("background-image : url(image/cal_input.jpg);")
 
-        self.setupUI()
+        self.showupUI()
 
-    def setupUI(self):
-        btn1 = QPushButton("저장", self)
+    def showupUI(self):
+        btn1 = QPushButton("불러오기", self)
         btn2 = QPushButton("취소", self)
-        btn1.setGeometry(450, 650, 80, 30)
-        btn1.clicked.connect(self.GoUpload)
-        btn1.clicked.connect(self.show_dialog)
+        btn3 = QPushButton("삭제", self)
+        btn1.setGeometry(350, 650, 80, 30)
+        btn1.clicked.connect(self.ShowDiary)
+
         self.msg = QMessageBox()
-        btn2.setGeometry(650, 650, 80, 30)
+        btn2.setGeometry(750, 650, 80, 30)
         btn2.clicked.connect(self.exist)
 
+        btn3.setGeometry(550, 650, 80, 30)
+        btn3.clicked.connect(self.DeleteDiary)
     # Calendar Open 함수
     @pyqtSlot()
     def calendar_change(self):
@@ -80,16 +82,36 @@ class CalendarWindow(QMainWindow):
     def select_today(self):
         self.cal.currentPageChanged(self, 2022, 10)
 
-    def GoUpload(self):
-        self.contents=''
-        self.date=self.calendar_label.text()
-        for line in self.b.toPlainText():
-            self.contents+=line
-        cur=conn.cursor()
-        sql="INSERT INTO calendar (caldate, contents) VALUES (%s, %s)"
-        cur.execute(sql, (self.date, self.contents))
-        conn.commit()
+    def selectTableList(self):
+        sdate=self.calendar_label.text()
+        cur = conn.cursor()
+        sql = "select * from calendar where caldate=%s"
+        cur.execute(sql, (sdate))
+        rows = cur.fetchall()
+        print(rows)
+        return rows
 
+    def ShowDiary(self):
+        contents=""
+        rows= self.selectTableList()
+        if rows:
+            for row in rows:
+                contents = row[2]
+        else:
+            contents="일기가 비어있다... 일기 쓰기로 가자!"
+        self.b.setPlainText(contents)
+
+    def deleteTableList(self):
+        ddate = self.calendar_label.text()
+        cur = conn.cursor()
+        dsql = "delete from calendar where caldate=%s"
+        cur.execute(dsql, (ddate))
+        conn.commit()
+        print(cur.rowcount)
+        self.show_dialog()
+
+    def DeleteDiary(self):
+        self.deleteTableList()
 
     def exist(self):
         self.hide()
@@ -98,8 +120,8 @@ class CalendarWindow(QMainWindow):
 
     def show_dialog(self):
         self.msg.setIcon(QMessageBox.Information)
-        self.msg.setWindowTitle('일기 쓰기')
-        self.msg.setText('일기가 저장되었습니다.')
+        self.msg.setWindowTitle('일기 삭제')
+        self.msg.setText('일기가 삭제되었습니다.')
         self.msg.setStandardButtons(QMessageBox.Ok)
         retval = self.msg.exec_()
 
@@ -110,8 +132,22 @@ class CalendarWindow(QMainWindow):
         elif retval == QMessageBox.Cancel:
             print('messagebox cancel : ', retval)
 
-if __name__ == '__main__':
+    def show_dialog2(self):
+        self.msg.setIcon(QMessageBox.Information)
+        self.msg.setWindowTitle('일기 삭제')
+        self.msg.setText('삭제할 일기가 없습니다.')
+        self.msg.setStandardButtons(QMessageBox.Ok)
+        retval = self.msg.exec_()
+
+        # # 반환값 판단
+        # print('QMessageBox 리턴값 ', retval)
+        if retval == QMessageBox.Ok:
+            self.exist()
+        elif retval == QMessageBox.Cancel:
+            print('messagebox cancel : ', retval)
+
+if __name__ == '_main_':
     app = QApplication(sys.argv)
-    mainWindow = CalendarWindow()
-    mainWindow.show()
+    showd = ShowDiaryWindow()
+    showd.show()
     sys.exit(app.exec_())
