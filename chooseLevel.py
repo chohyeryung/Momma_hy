@@ -19,7 +19,12 @@ class ChooseLevel(QMainWindow):
         HighLevel = QPushButton('상', self)
         MiddleLevel = QPushButton('중', self)
         LowLevel = QPushButton('하', self)
-        print('hi')
+        goHome = QPushButton('', self)
+
+        goHome.move(550, 650)
+        goHome.resize(128, 128)
+        goHome.setStyleSheet("background-image : url(image/home.png);")
+        goHome.clicked.connect(self.exist)
 
         LowLevel.move(800,300)
         LowLevel.resize(200,200)
@@ -59,7 +64,7 @@ class ChooseLevel(QMainWindow):
         self.setWindowTitle('난이도 고르기')
         self.setWindowIcon(QIcon('image/baby.png'))
         self.setGeometry(300, 100, 1200, 800)
-        self.setStyleSheet("background-image : url(image/black.jpg);")
+        self.setStyleSheet("background-image : url(image/level_back.png);")
         self.show()
 
     def GoLowGame(self):
