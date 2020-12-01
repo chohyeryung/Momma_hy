@@ -4,7 +4,6 @@ import pymysql as pymysql
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from PyQt5.uic.properties import QtGui
 
 conn = pymysql.connect(
     host='localhost',
