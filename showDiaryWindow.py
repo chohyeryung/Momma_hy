@@ -146,7 +146,7 @@ class ShowDiaryWindow(QMainWindow):
         elif retval == QMessageBox.Cancel:
             print('messagebox cancel : ', retval)
 
-if __name__ == '_main_':
+if __name__ == '__main__':
     app = QApplication(sys.argv)
     showd = ShowDiaryWindow()
     showd.show()
