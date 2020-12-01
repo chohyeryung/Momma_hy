@@ -1,16 +1,27 @@
 import sys
+
+import pymysql as pymysql
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from Upload_diary import Upload
+conn = pymysql.connect(
+    host='localhost',
+    user='root',
+    password='111111',
+    db='mama',
+    charset='utf8'
+)
 
 class CalendarWindow(QMainWindow):
+
     def __init__(self,choice_window):
         super().__init__()
         self.choice_window=choice_window
-
         # 윈도우 설정
         self.setGeometry(300, 100, 1200, 800)  # x, y, w, h
+        self.setStyleSheet("background-image : url(image/cal_back.jpg);")
+        self.setWindowIcon(QIcon('image/baby.png'))
         self.setWindowTitle('일기 쓰기')
 
         # CalendarWidget 위젯 화면에 표시
@@ -18,6 +29,8 @@ class CalendarWindow(QMainWindow):
         self.cal.setGeometry(120, 50, 970, 300)
         self.cal.setGridVisible(True)
         self.cal.selectionChanged.connect(self.calendar_change)
+        self.cal.setVerticalHeaderFormat(0)
+        self.cal.setStyleSheet("background-color : lightblue;")
 
         # min max 기간 설정
         #self.cal.setMinimumDate(QDate(2020, 8, 25))
@@ -30,8 +43,13 @@ class CalendarWindow(QMainWindow):
 
         self.b = QPlainTextEdit(self)
         self.b.insertPlainText("일기를 작성해요주세용.\n")
-        # self.contents=self.b.QPlainTextEdit.toPlainText()
+        font1 = self.b.font()
+        font1.setPointSize(20)
+        font1.setBold(True)
+        self.b.setFont(font1)
         self.b.setGeometry(120, 420, 970, 200)
+        self.b.setStyleSheet("background-image : url(image/cal_input.jpg);")
+        self.setWindowIcon(QIcon('image/cal.png'))
 
         self.setupUI()
 
@@ -51,14 +69,15 @@ class CalendarWindow(QMainWindow):
         cal_date = self.cal.selectedDate()
         strDate = cal_date.toString('yyyy년 ' + 'MM월 ' +'dd일')  # QDate 를 str
         self.calendar_label.setAlignment(Qt.AlignCenter)
+        font1=self.calendar_label.font()
+        font1.setPointSize(25)
+        font1.setBold(True)
+        self.calendar_label.setFont(font1)
         self.calendar_label.setText(strDate)
 
     # 달력에서 현재를 선택
     @pyqtSlot()
     def select_today(self):
-        # self.cal.showToday()
-        # self.cal.showNextMonth()
-        #self.cal.setSelectedDate(QDate())
         self.cal.currentPageChanged(self, 2022, 10)
 
     def GoUpload(self):
@@ -66,22 +85,11 @@ class CalendarWindow(QMainWindow):
         self.date=self.calendar_label.text()
         for line in self.b.toPlainText():
             self.contents+=line
-        #print(self.contents)
-        self.file_upload=Upload()
-        self.file_upload.set(self.date, self.contents)
-        # print(self.file_upload.date)
-        # print(self.file_upload.contents)
-        today_diary=open('diary.txt','a',encoding='utf-8')
+        cur=conn.cursor()
+        sql="INSERT INTO calendar (caldate, contents) VALUES (%s, %s)"
+        cur.execute(sql, (self.date, self.contents))
+        conn.commit()
 
-        today_diary.write(self.file_upload.date)
-        today_diary.write('\n')
-        today_diary.write(self.file_upload.contents)
-        today_diary.write('\n')
-        today_diary.write('\n')
-
-        today_diary.close()
-        #self.file_upload.set(self.strDate, self.contents)
-        # self.file_upload.get()
 
     def exist(self):
         self.hide()
