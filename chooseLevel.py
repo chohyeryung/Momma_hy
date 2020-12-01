@@ -59,7 +59,7 @@ class ChooseLevel(QMainWindow):
         self.setWindowTitle('난이도 고르기')
         self.setWindowIcon(QIcon('image/baby.png'))
         self.setGeometry(300, 100, 1200, 800)
-        self.setStyleSheet("background-image : url(image/black.jpg);")
+        self.setStyleSheet("background-image : url(image/GOCHU.PNG);")
         self.show()
 
     def GoLowGame(self):
