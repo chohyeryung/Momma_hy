@@ -21,7 +21,7 @@ class ChooseLevel(QMainWindow):
         LowLevel = QPushButton('하', self)
         goHome = QPushButton('', self)
 
-        goHome.move(550, 650)
+        goHome.move(530, 650)
         goHome.resize(128, 128)
         goHome.setStyleSheet("background-image : url(image/home.png);")
         goHome.clicked.connect(self.exist)
@@ -62,7 +62,7 @@ class ChooseLevel(QMainWindow):
 
         self.setLayout(layout)
         self.setWindowTitle('난이도 고르기')
-        self.setWindowIcon(QIcon('image/baby.png'))
+        self.setWindowIcon(QIcon('image/pepper.png'))
         self.setGeometry(300, 100, 1200, 800)
         self.setStyleSheet("background-image : url(image/level_back.png);")
         self.show()

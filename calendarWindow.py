@@ -48,6 +48,7 @@ class CalendarWindow(QMainWindow):
         self.b.setFont(font1)
         self.b.setGeometry(120, 420, 970, 200)
         self.b.setStyleSheet("background-image : url(image/cal_input.jpg);")
+        self.setWindowIcon(QIcon('image/cal.png'))
 
         self.setupUI()
 

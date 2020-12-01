@@ -48,6 +48,7 @@ class ShowDiaryWindow(QMainWindow):
         # self.contents=self.b.QPlainTextEdit.toPlainText()
         self.b.setGeometry(120, 420, 970, 200)
         self.b.setStyleSheet("background-image : url(image/cal_input.jpg);")
+        self.setWindowIcon(QIcon('image/sung.png'))
 
         self.showupUI()
 
