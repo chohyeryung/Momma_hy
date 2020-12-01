@@ -8,7 +8,7 @@ from PyQt5.QtCore import *
 conn = pymysql.connect(
     host='localhost',
     user='root',
-    password='111111',
+    password='mirim2',
     db='mama',
     charset='utf8'
 )
@@ -30,6 +30,7 @@ class CalendarWindow(QMainWindow):
         self.cal.setGridVisible(True)
         self.cal.selectionChanged.connect(self.calendar_change)
         self.cal.setVerticalHeaderFormat(0)
+        self.cal.setStyleSheet("background-color : lightblue;")
 
         # min max 기간 설정
         #self.cal.setMinimumDate(QDate(2020, 8, 25))
