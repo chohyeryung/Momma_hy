@@ -55,15 +55,19 @@ class ShowDiaryWindow(QMainWindow):
         btn1 = QPushButton("불러오기", self)
         btn2 = QPushButton("취소", self)
         btn3 = QPushButton("삭제", self)
-        btn1.setGeometry(350, 650, 80, 30)
+        btn4 = QPushButton("수정", self)
+        btn1.setGeometry(250, 650, 80, 30)
         btn1.clicked.connect(self.ShowDiary)
 
         self.msg = QMessageBox()
-        btn2.setGeometry(750, 650, 80, 30)
+        btn2.setGeometry(850, 650, 80, 30)
         btn2.clicked.connect(self.exist)
 
-        btn3.setGeometry(550, 650, 80, 30)
+        btn3.setGeometry(650, 650, 80, 30)
         btn3.clicked.connect(self.DeleteDiary)
+
+        btn4.setGeometry(450, 650, 80, 30)
+        btn4.clicked.connect(self.updateDiary)
     # Calendar Open 함수
     @pyqtSlot()
     def calendar_change(self):
@@ -106,8 +110,18 @@ class ShowDiaryWindow(QMainWindow):
         dsql = "delete from calendar where caldate=%s"
         cur.execute(dsql, (ddate))
         conn.commit()
-        print(cur.rowcount)
         self.show_dialog()
+
+    def updateDiary(self):
+        self.contents = ''
+        for line in self.b.toPlainText():
+            self.contents += line
+        udate = self.calendar_label.text()
+        cur=conn.cursor()
+        usql="update calendar set contents=%s where caldate=%s"
+        cur.execute(usql, (self.contents, udate))
+        conn.commit()
+        self.show_dialog3()
 
     def DeleteDiary(self):
         self.deleteTableList()
@@ -142,6 +156,20 @@ class ShowDiaryWindow(QMainWindow):
         # print('QMessageBox 리턴값 ', retval)
         if retval == QMessageBox.Ok:
             self.exist()
+        elif retval == QMessageBox.Cancel:
+            print('messagebox cancel : ', retval)
+
+    def show_dialog3(self):
+        self.msg.setIcon(QMessageBox.Information)
+        self.msg.setWindowTitle('일기 수정')
+        self.msg.setText('일기가 수정되었습니다.')
+        self.msg.setStandardButtons(QMessageBox.Ok)
+        retval = self.msg.exec_()
+
+        # # 반환값 판단
+        # print('QMessageBox 리턴값 ', retval)
+        if retval == QMessageBox.Ok:
+            return True
         elif retval == QMessageBox.Cancel:
             print('messagebox cancel : ', retval)
 

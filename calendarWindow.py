@@ -4,9 +4,6 @@ import pymysql as pymysql
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from PyQt5.uic.properties import QtGui
-
-from Upload_diary import Upload
 
 conn = pymysql.connect(
     host='localhost',
@@ -15,6 +12,7 @@ conn = pymysql.connect(
     db='mama',
     charset='utf8'
 )
+
 class CalendarWindow(QMainWindow):
 
     def __init__(self,choice_window):
