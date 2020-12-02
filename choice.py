@@ -4,8 +4,9 @@ from PyQt5.QtGui import QIcon
 from calendar import Calendar
 
 from calendarWindow import CalendarWindow
-from game_mama import Game_mama
+from chooseLevel import ChooseLevel
 from showDiaryWindow import ShowDiaryWindow
+
 
 class Choice(QMainWindow):
     def __init__(self):
@@ -45,7 +46,7 @@ class Choice(QMainWindow):
 
         self.setLayout(hbox)
         self.setWindowTitle('Momma')
-        self.setWindowIcon(QIcon('image/baby.png'))
+        self.setWindowIcon(QIcon('image/baby_game.png'))
         self.setGeometry(300,100,1200,800)
         self.setStyleSheet("background-image : url(image/choice_back.jpg);")
         self.show()
@@ -61,7 +62,9 @@ class Choice(QMainWindow):
         self.hide()
 
     def GoGame(self):
-        self.gamew = Game_mama()
+        self.clevel = ChooseLevel(self)
+        self.clevel.show()
+        self.hide()
 
 if __name__=="__main__":
     app=QApplication(sys.argv)
