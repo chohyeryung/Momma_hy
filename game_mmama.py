@@ -13,7 +13,6 @@ class Game_mmama(QWidget):
 
     def initUI(self):
         # 폰트
-        clock = pygame.time.Clock()
         over_font = pygame.font.Font('babyb.ttf', 50)  # 폰트 ,크기
         small_font = pygame.font.Font('babyb.ttf', 36)
         missed = 0
@@ -115,9 +114,6 @@ class Game_mmama(QWidget):
 
             for bad2, dy in bads2:
                 screen.blit(bad2_image, bad2)
-
-            # for good, dy in goods:
-            #     screen.blit(good_image, good)
 
             screen.blit(baby_image, baby)
 

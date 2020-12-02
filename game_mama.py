@@ -13,11 +13,10 @@ class Game_mama(QWidget):
 
     def initUI(self):
         # 폰트
-        clock = pygame.time.Clock()
         over_font = pygame.font.Font('babyb.ttf', 50)  # 폰트 ,크기
         small_font = pygame.font.Font('babyb.ttf', 36)
         missed = 0
-        clear=True
+        clear = True
         running = True
         BLUE = (8, 62, 163)
         # 총 시간
@@ -89,13 +88,11 @@ class Game_mama(QWidget):
             for bad, dy in bads:
                 screen.blit(bad_image, bad)
 
-            # for good, dy in goods:
-            #     screen.blit(good_image, good)
-
             screen.blit(baby_image, baby)
 
             timer = small_font.render("Time : {}".format(int(total_time - ellipsis_time)), True, (255, 255, 255))
             screen.blit(timer, (10, 20))
+
             missed_image = small_font.render('점수 {}'.format(missed), True, BLUE)
             screen.blit(missed_image, missed_image.get_rect(right=screen_width - 10, top=10))
 
