@@ -7,6 +7,8 @@ from PyQt5.QtCore import *
 from game_hmama import Game_hmama
 from game_mama import Game_mama
 from game_mmama import Game_mmama
+from recipeWindow import RecipeWindow
+
 
 class ChooseLevel(QMainWindow):
     def __init__(self,choice_window):
@@ -20,11 +22,17 @@ class ChooseLevel(QMainWindow):
         MiddleLevel = QPushButton('중', self)
         LowLevel = QPushButton('하', self)
         goHome = QPushButton('', self)
+        goRecipe = QPushButton('', self)
 
-        goHome.move(530, 650)
+        goHome.move(420, 650)
         goHome.resize(128, 128)
         goHome.setStyleSheet("background-image : url(image/home.png);")
         goHome.clicked.connect(self.exist)
+
+        goRecipe.move(630, 650)
+        goRecipe.resize(128, 128)
+        goRecipe.setStyleSheet("background-image : url(image/manual.png);")
+        goRecipe.clicked.connect(self.GoRecipe)
 
         LowLevel.move(800,300)
         LowLevel.resize(200,200)
@@ -75,6 +83,11 @@ class ChooseLevel(QMainWindow):
 
     def GoHighGame(self):
         self.hgame = Game_hmama()
+
+    def GoRecipe(self):
+        self.rcw = RecipeWindow(self)
+        self.rcw.show()
+        self.hide()
 
     def exist(self):
         self.hide()
