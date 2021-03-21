@@ -32,7 +32,7 @@ class Game_mama(QWidget):
         clear_sound = pygame.mixer.Sound('music/clear.mp3')
         game_over_sound = pygame.mixer.Sound('music/sad_bgm.mp3')
 
-        bad_image = pygame.image.load("image/pepper.png")
+        bad_image = pygame.image.load("image/persimmon.png")
         bads = []
         for i in range(3):
             bad = bad_image.get_rect(left=random.randint(0, screen_width - bad_image.get_width()), top=-100)
